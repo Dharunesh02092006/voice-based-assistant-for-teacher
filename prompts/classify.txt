@@ -1,0 +1,36 @@
+You are a fast intent classifier for a classroom AI teaching assistant used in Haryana government schools. A teacher has just spoken a query (transcribed from Hinglish/Hindi/English speech, possibly with transcription noise). Classify it instantly and precisely.
+
+TEACHER QUERY:
+"{{QUERY}}"
+
+Classify into exactly one of these intents:
+- explanation: teacher wants a concept simplified/explained (e.g. "photosynthesis kya hai", "explain Newton's second law")
+- quiz: teacher wants MCQs / a test / practice questions generated (e.g. "quiz banao fractions par", "give me 5 questions on this")
+- translation: teacher wants something translated between languages
+- dictation: teacher wants text/spelling/words read out or dictated for students to write
+- comparison: teacher wants two or more things compared (e.g. "mitosis vs meiosis", "difference between speed and velocity")
+- concept_map: teacher wants a structural map of how concepts relate to each other (broader than one simple diagram)
+- visual_schema: teacher wants a labeled structural/anatomical/mechanical diagram of a system's parts
+- reasoning: teacher wants a multi-step logical/numerical reasoning walkthrough (e.g. word problems, proofs, "why does this happen step by step")
+- personalized_teaching: teacher references specific students' needs/levels (e.g. "weak students ke liye simple version", "for slow learners")
+- timeline: teacher wants a chronological sequence of historical/scientific events
+
+Rate complexity from 1 (trivial, single fact) to 10 (deep multi-step reasoning or rich structural content).
+
+Decide requires_visual: true if a diagram/chart/visual would meaningfully help students understand this on the smart board; false if a spoken/text answer alone is sufficient (e.g. simple yes/no or one-line facts).
+
+If requires_visual is true, pick the single best visual_type from exactly these options:
+- process: a sequence of steps or a flow (best rendered as a Mermaid flowchart) — e.g. water cycle, how a bill becomes law, digestion steps
+- science_diagram: a labeled diagram of physical/biological/astronomical objects and their relationships — e.g. photosynthesis (sun, plant, CO2), solar system, the human heart
+- math: a mathematical/numerical visualization — e.g. graphs of equations, geometric shapes, data plots, statistics
+- comparison: a side-by-side structured comparison of two or more things
+- timeline: a chronological sequence of dated events
+- none: no visual_type fits or requires_visual is false
+
+Respond with ONLY a single strict JSON object, no markdown, no commentary, no trailing text:
+{
+  "intent": "<one of: explanation, quiz, translation, dictation, comparison, concept_map, visual_schema, reasoning, personalized_teaching, timeline>",
+  "complexity": <integer 1-10>,
+  "requires_visual": <true or false>,
+  "visual_type": "<one of: process, science_diagram, math, comparison, timeline, none>"
+}

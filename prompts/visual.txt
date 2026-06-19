@@ -1,0 +1,46 @@
+DIAGRAM JSON SCHEMA (the "diagram" field of your response MUST match the shape for the given visual_type below; produce ONLY the relevant shape for the visual_type you were given, omitting the others):
+
+If visual_type is "process":
+{
+  "mermaid": "<a complete, syntactically valid Mermaid flowchart definition as a single string, e.g. 'flowchart LR\\nA[Start] --> B[Step 2]\\nB --> C[End]'. Use short node labels in plain Hinglish/English. 4-8 nodes is ideal for a smart board.>"
+}
+
+If visual_type is "science_diagram":
+{
+  "diagram_type": "<short slug describing the scene, e.g. photosynthesis>",
+  "elements": [
+    {"id": "<unique short id>", "type": "<one of: sun, plant, cloud, planet, organ, circle, rect, text>", "label": "<short label text, omit or empty string if not needed>"},
+    {"id": "<unique short id>", "type": "arrow", "from": "<id of source element>", "to": "<id of target element>", "label": "<short label for what flows along this arrow, e.g. 'CO2'>"}
+  ]
+}
+Rules: include 3-6 non-arrow elements plus the arrows connecting them. Every arrow's "from"/"to" MUST reference an "id" defined elsewhere in the same elements list. Do not invent element types outside the allowed list; for anything else use "circle", "rect", or "text" as the closest generic shape.
+
+If visual_type is "math":
+{
+  "chart_type": "<one of: line, bar, scatter, pie>",
+  "title": "<short chart title>",
+  "x_label": "<x-axis label, omit for pie>",
+  "y_label": "<y-axis label, omit for pie>",
+  "x": [<numbers or short category strings for the x-axis / pie labels>],
+  "y": [<numbers for the y-axis / pie values, same length as x>]
+}
+Rules: keep it to 3-12 data points. Generate real, mathematically correct values appropriate to the topic (e.g. if asked to graph y = x^2, compute actual y values for each x).
+
+If visual_type is "comparison":
+{
+  "items": [
+    {"title": "<name of thing being compared>", "points": ["<short distinguishing point>", "<short distinguishing point>", "..."]},
+    {"title": "<name of second thing being compared>", "points": ["...", "..."]}
+  ]
+}
+Rules: 2-4 items, 2-5 points each, points should be parallel/comparable across items where possible.
+
+If visual_type is "timeline":
+{
+  "events": [
+    {"date": "<short date/year/era label>", "title": "<short event title>", "description": "<one short sentence>"}
+  ]
+}
+Rules: 3-8 events in correct chronological order.
+
+If visual_type is "none": set "diagram" to an empty object {}.
